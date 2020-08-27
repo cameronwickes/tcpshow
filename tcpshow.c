@@ -27,7 +27,9 @@
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
 
-#define VERSION "0.1"
+#define VERSION "1.1"
+//REV 1.0 - Initial Release.
+//REV 1.1 - Bug Fixes and Code Tidy.
 #define STRINGFORMAT 64
 #define TOTALOPTIONS 24
 #define TCP_SYN 0x02
@@ -177,8 +179,8 @@ void packetAnalysis(unsigned char *userData, const struct pcap_pkthdr* pkthdr, c
 	const struct udphdr* udpHeader;
 	const struct icmphdr* icmpHeader;
 	char* outputs[TOTALOPTIONS];
-	unsigned char *data;
-	char sourceIP[STRINGFORMAT] = "-", destinationIP[STRINGFORMAT] = "-", sourcePort[STRINGFORMAT] = "-", destinationPort[STRINGFORMAT] = "-", totalLength[STRINGFORMAT] = "-", ipHeaderLength[STRINGFORMAT] = "-", protoHeaderLength[STRINGFORMAT] = "-", dataLength[STRINGFORMAT] = "-", sourceMAC[STRINGFORMAT] = "-",destinationMAC[STRINGFORMAT] = "-", etherType[STRINGFORMAT] = "-", ipID[STRINGFORMAT] = "-", fragmentBytes[STRINGFORMAT] = "-", timeToLive[STRINGFORMAT] = "-", protocol[STRINGFORMAT] = "-", ipChecksum[STRINGFORMAT] = "-", protocolHeaderLength[STRINGFORMAT] = "-", tcpSequenceNumber[STRINGFORMAT] = "-", tcpAcknowledgementNumber[STRINGFORMAT] = "-", tcpFlags[STRINGFORMAT] = "-", tcpWindowSize[STRINGFORMAT] = "-", protocolChecksum[STRINGFORMAT] = "-", tcpUrgentPointer[STRINGFORMAT] = "-", icmpType[STRINGFORMAT] = "-", icmpCode[STRINGFORMAT] = "-", icmpIdentifier[STRINGFORMAT] = "-";
+
+	char sourceIP[STRINGFORMAT] = "-", destinationIP[STRINGFORMAT] = "-", sourcePort[STRINGFORMAT] = "-", destinationPort[STRINGFORMAT] = "-", totalLength[STRINGFORMAT] = "-", ipHeaderLength[STRINGFORMAT] = "-", dataLength[STRINGFORMAT] = "-", sourceMAC[STRINGFORMAT] = "-",destinationMAC[STRINGFORMAT] = "-", etherType[STRINGFORMAT] = "-", ipID[STRINGFORMAT] = "-", fragmentBytes[STRINGFORMAT] = "-", timeToLive[STRINGFORMAT] = "-", protocol[STRINGFORMAT] = "-", ipChecksum[STRINGFORMAT] = "-", protocolHeaderLength[STRINGFORMAT] = "-", tcpSequenceNumber[STRINGFORMAT] = "-", tcpAcknowledgementNumber[STRINGFORMAT] = "-", tcpFlags[STRINGFORMAT] = "-", tcpWindowSize[STRINGFORMAT] = "-", protocolChecksum[STRINGFORMAT] = "-", tcpUrgentPointer[STRINGFORMAT] = "-", icmpType[STRINGFORMAT] = "-", icmpCode[STRINGFORMAT] = "-";
  
  	ethernetHeader = (struct ether_header*)packet;
  	sprintf(sourceMAC, "%02x:%02x:%02x:%02x:%02x:%02x", (ethernetHeader->ether_shost[0]), (ethernetHeader->ether_shost[1]), (ethernetHeader->ether_shost[2]), (ethernetHeader->ether_shost[3]),(ethernetHeader->ether_shost[4]), (ethernetHeader->ether_shost[5]));
