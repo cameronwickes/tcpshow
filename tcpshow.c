@@ -5,10 +5,11 @@
  *  for redistribution of modifications or modified code. License
  *  is granted for non-commercial use only.
  *
- *  This code reads in a libpcap compatible file and extracts 
- *  user specified fields and display them to the user, to help 
- *  them get a better understanding as to what values are inside 
- *  the packet. Libpcap 0.4 (or higher) is required.
+ *  This code reads in a libpcap compatible file to extract 
+ *  user specified fields and display them to stdout. It aims to 
+ *  help analysts get a better understanding as to what values
+ *  are inside the packet, to potentially identify anomalies. 
+ *  Libpcap 0.4 (or higher) is required.
  * 
  *  TODO: Implement ARP and IP6
  */
@@ -16,6 +17,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
 #include <pcap.h>
@@ -93,37 +95,36 @@ void DEBUG(char *debuggingString)
 
 //USAGE prints relevant information on how to use the program.
 void usage() {
-	printf("Usage:\n\ttcpshow -r <source_file> -e <fields>\n\n");
+	printf("Usage:\n\ttcpshow -r <source_file> -e <fields> [-c <count>]\n\n");
 	
-	printf("\t-h\tThis help\n");
 	printf("\t-r\tSpecify a source pcap file to read in.\n");
-	printf("\t-c\tSpecify a certain number of packets to extract.\n");
-	printf("\t-e\tSpecify an extracted field to show.\n\n");
+	printf("\t-e\tSpecify an extracted field to show.\n");
+	printf("\t-c\tSpecify a certain number of packets to extract.\n\n");
 	
-	printf("\t\tsrcmac\tSource MAC Address.\n");
-	printf("\t\tdstmac\tDestination MAC Address.\n");
-	printf("\t\tethtype\tEthernet Type.\n");
-	printf("\t\tsrcip\tSource IP Address.\n");
-	printf("\t\tdstip\tDestination IP Address.\n");
-	printf("\t\tiplen\tLength of the IP Header.\n");
-	printf("\t\tipid\tIP Identification Number.\n");
-	printf("\t\tfrag\tFragmentation Bytes.\n");
-	printf("\t\tttl\tTime To Live.\n");
-	printf("\t\tproto\tType of Protocol.\n");
-	printf("\t\tipchk\tIP Header Checksum.\n");
-	printf("\t\thdrlen\tLength of the Protocol Header.\n");	
-	printf("\t\tsrcprt\tSource Port.\n");
-	printf("\t\tdstprt\tDestination Port.\n");
-	printf("\t\ttcpseq\tTCP Sequence Number.\n");
-	printf("\t\ttcpack\tTCP Acknowledgement Number.\n");
-	printf("\t\ttcpflg\tTCP Flags.\n");
-	printf("\t\ttcpwin\tTCP Window Size.\n");
-	printf("\t\ttcpurg\tTCP Urgent Pointer.\n");
-	printf("\t\tprotochk\tProtocol Header Checksum.\n");
-	printf("\t\ticmptype\tICMP Type.\n");
-	printf("\t\ticmpcode\tICMP Code.\n");
- 	printf("\t\ttlen\tTotal length of the packet (excluding frame).\n");
-	printf("\t\tdlen\tLength of the data segment (tcp).\n");
+	printf("\t\t%-10s %s\n","srcmac","Source MAC Address.");
+	printf("\t\t%-10s %s\n","dstmac","Destination MAC Address.");
+	printf("\t\t%-10s %s\n","ethtype","Ethernet Type.");
+	printf("\t\t%-10s %s\n","srcip","Source IP Address.");
+	printf("\t\t%-10s %s\n","dstip","Destination IP Address.");
+	printf("\t\t%-10s %s\n","iplen","Length of the IP Header.");
+	printf("\t\t%-10s %s\n","ipid","IP Identification Number.");
+	printf("\t\t%-10s %s\n","frag","Fragmentation Bytes.");
+	printf("\t\t%-10s %s\n","ttl","Time To Live.");
+	printf("\t\t%-10s %s\n","proto","Protocol Type.");
+	printf("\t\t%-10s %s\n","ipchk","IP Header Checksum.");
+	printf("\t\t%-10s %s\n","hdrlen","Length of the Protocol Header.");
+	printf("\t\t%-10s %s\n","srcprt","Source Port.");
+	printf("\t\t%-10s %s\n","dstprt","Destination Port.");
+	printf("\t\t%-10s %s\n","tcpseq","TCP Sequence Number.");
+	printf("\t\t%-10s %s\n","tcpack","TCP Acknowledgement Number.");
+	printf("\t\t%-10s %s\n","tcpflg","TCP Flags.");
+	printf("\t\t%-10s %s\n","tcpwin","TCP Window Size.");
+	printf("\t\t%-10s %s\n","tcpurg","TCP Urgent Pointer.");
+	printf("\t\t%-10s %s\n","protochk","Protocol Header Checksum.");
+	printf("\t\t%-10s %s\n","icmptype","ICMP Type.");
+	printf("\t\t%-10s %s\n","icmpcode","ICMP Code.");
+	printf("\t\t%-10s %s\n","tlen","Total length of the packet (excluding frame).");
+	printf("\t\t%-10s %s\n","dlen","Length of the data segment (tcp).");
  	exit(3);
 }
 
@@ -221,12 +222,12 @@ void packetAnalysis(unsigned char *userData, const struct pcap_pkthdr* pkthdr, c
       	 	sprintf(sourcePort,"%d",ntohs(tcpHeader->source));
       	 	sprintf(destinationPort,"%d",ntohs(tcpHeader->dest));
       	 	sprintf(protocolHeaderLength,"%d",(tcpHeader->th_off * 4));
-      	 	sprintf(tcpSequenceNumber,"%d",ntohl(tcpHeader->th_seq));
-      	 	sprintf(tcpAcknowledgementNumber,"%d",ntohl(tcpHeader->th_ack));
+      	 	sprintf(tcpSequenceNumber,"%" PRIu32,ntohl(tcpHeader->th_seq));
+      	 	sprintf(tcpAcknowledgementNumber,"%" PRIu32,ntohl(tcpHeader->th_ack));
       	 	sprintf(tcpWindowSize,"%d",ntohs(tcpHeader->th_win));
       	 	sprintf(protocolChecksum,"%#04x",ntohs(tcpHeader->th_sum));
       	 	sprintf(tcpUrgentPointer,"%d",ntohs(tcpHeader->th_urp));
-
+			
             char tcpFlagBuffer[STRINGFORMAT];
 			strcpy(tcpFlagBuffer,"");
 			if (((tcpHeader->th_flags) & TCP_SYN) == TCP_SYN) { strncat(tcpFlagBuffer,"S",2); }
@@ -327,12 +328,6 @@ int main(int argc, char **argv) {
          case 'h':
          	usage();
          	break;
-         case ':':
-            printf("ERROR: Option (%c) provided without a value...\n",optopt);
-            break;
-         case '?':
-            printf("ERROR: Unknown option (%c) provided. See -h for usage...\n", optopt);
-            break;
       }
    }
    
