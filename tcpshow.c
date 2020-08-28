@@ -124,7 +124,7 @@ void usage() {
 	printf("\t\t%-10s %s\n","icmptype","ICMP Type.");
 	printf("\t\t%-10s %s\n","icmpcode","ICMP Code.");
 	printf("\t\t%-10s %s\n","tlen","Total length of the packet (excluding frame).");
-	printf("\t\t%-10s %s\n","dlen","Length of the data segment (tcp).");
+	printf("\t\t%-10s %s\n","dlen","Length of the data segment.");
  	exit(3);
 }
 
