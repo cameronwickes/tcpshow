@@ -14,6 +14,7 @@
 - Clone this repo to your local machine using `https://github.com/cameronwickes/tcpshow`.
 	```
 	$ git clone https://github.com/cameronwickes/tcpshow
+	$ cd tcpshow
 	```
 
 ### Setup
