@@ -1,5 +1,4 @@
 /*
- *
  *  This code is Copyright (C) 2020, Cameron Wickes.
  *  Permission is granted for code modification, but not granted
  *  for redistribution of modifications or modified code. License
