@@ -253,8 +253,8 @@ void packetAnalysis(unsigned char *userData, const struct pcap_pkthdr* pkthdr, c
          if (ipHeader->ip_p == 1) {		
          	icmpHeader = (struct icmphdr*)(packet + sizeof(struct ether_header) + sizeof(struct ip));
 			sprintf(protocolHeaderLength,"%d",8);
-			sprintf(icmpCode, "%d", ntohs(icmpHeader->code));
-			sprintf(icmpType, "%d", ntohs(icmpHeader->type));
+			sprintf(icmpCode, "%d", (icmpHeader->code));
+			sprintf(icmpType, "%d", (icmpHeader->type));
 			sprintf(protocolChecksum, "%#04x", ntohs(icmpHeader->checksum));
          }
                 
